@@ -6,10 +6,24 @@ require 'neo4j'
 module Neo4j
   module WillPaginate
 
+    # The module provides the common interface for the pagination on any Enumerable class.
+    # By including the module, {Neo4j::WillPaginate::Pagination#paginate} method will be available.
     module Pagination
       include ::WillPaginate::CollectionMethods
 
 
+      # Paginates the {Enumerable} and returns {::WillPaginate::Collection} instance.
+      #
+      # @param [Hash] options a hash of options for the pagination.
+      # @option options [Symbol] :page current page for the pagination (defualts to 1).
+      # @option options [Symbol] :per_page numer of items per page (defaults to {::WillPaginate.per_page}).
+      #                           Aliases are `:per`, `:limit`.
+      #
+      # @example Paginate on a relationship:
+      #   person.friends.paginate(:page => 5, :per_page => 10)
+      #
+      # @example Paginate the search results:
+      #   Person.all(:conditions => "name: Dmytrii*").paginate(:page => 5, :per_page => 10)
       def paginate(options={})
         page      = options[:page] || 1
         per_page  = options[:per] || options[:per_page] || options[:limit] || WillPaginate.per_page
