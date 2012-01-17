@@ -1,2 +1,7 @@
-srand # Workaround for a JRuby 1.6.5 bug
+srand # JRuby bug
 require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+
+RSpec::Core::RakeTask.new("spec")
+
+task :default => 'spec'
