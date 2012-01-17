@@ -31,7 +31,8 @@ end
   Neo4j::Index::LuceneQuery,
   Neo4j::HasN::Mapping,
   Neo4j::Rails::Relationships::NodesDSL,
-  Neo4j::HasList::Mapping
+  Neo4j::HasList::Mapping,
+  Neo4j::Rails::Relationships::RelsDSL
 ].each do |m|
   m.send :include, Neo4j::WillPaginate::Pagination
 end
