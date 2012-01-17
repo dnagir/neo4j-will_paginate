@@ -12,15 +12,19 @@ module Specs
   describe Neo4j::WillPaginate::Pagination do
     subject { source.paginate(:page => 2, :per_page => 3) }
 
-    context ::Neo4j::Traversal::Traverser do
-      let(:source)  { Person.all }
-      before        { 10.times { Person.create } }
-
+    def self.shold_be_paginated
       its(:size)          { should == 3 }
       its(:current_page)  { should == 2 }
       its(:per_page)      { should == 3 }
       its(:total_entries) { should == 10 }
       its(:offset)        { should == 3 }
+    end
+
+    context ::Neo4j::Traversal::Traverser do
+      let(:source)  { Person.all }
+      before        { 10.times { Person.create } }
+
+      should_be_paginated
     end
 
     context ::Neo4j::Index::LuceneQuery do
