@@ -25,8 +25,8 @@ module Neo4j
       # @example Paginate the search results:
       #   Person.all(:conditions => "name: Dmytrii*").paginate(:page => 5, :per_page => 10)
       def paginate(options={})
-        page      = options[:page] || 1
-        per_page  = options[:per] || options[:per_page] || options[:limit] || WillPaginate.per_page
+        page      = (options[:page] || 1).to_i
+        per_page  = (options[:per] || options[:per_page] || options[:limit] || WillPaginate.per_page).to_i
         ::WillPaginate::Collection.create(page, per_page) do |pager|
           res = ::Neo4j::Paginated.create_from(self, page, per_page)
           pager.replace res.to_a

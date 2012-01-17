@@ -42,6 +42,7 @@ module Specs
       end
 
       context ::Neo4j::Rails::Relationships::RelsDSL do
+        subject { source.paginate(:page => "2", :per => "3") } # Just a bit different set of options
         let(:source)        { he.rels(:friends, :outgoing) }
         should_be_paginated
       end
