@@ -5,11 +5,11 @@ require "neo4j-will_paginate/version"
 Gem::Specification.new do |s|
   s.name        = "neo4j-will_paginate"
   s.version     = Neo4j::WillPaginate::VERSION
-  s.authors     = ["Dmytrii Nagirniak"]
-  s.email       = ["dnagir@gmail.com"]
-  s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.authors     = ["Dmytrii Nagirniak", "Andreas Ronge"]
+  s.email       = ["dnagir@gmail.com", "andreas.ronge@gmail.com"]
+  s.homepage    = "https://github.com/dnagir/neo4j-will_paginate"
+  s.summary     = %q{Integration between neo4j.rb and will_paginate.}
+  s.description = s.summary
 
   s.rubyforge_project = "neo4j-will_paginate"
 
