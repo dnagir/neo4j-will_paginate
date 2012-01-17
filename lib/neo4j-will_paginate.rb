@@ -28,7 +28,9 @@ end
 
 [
   Neo4j::Traversal::Traverser,
-  Neo4j::Index::LuceneQuery
+  Neo4j::Index::LuceneQuery,
+  Neo4j::HasN::Mapping,
+  Neo4j::Rails::Relationships::NodesDSL
 ].each do |m|
   m.send :include, Neo4j::WillPaginate::Pagination
 end

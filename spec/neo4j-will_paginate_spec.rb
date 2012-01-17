@@ -33,14 +33,31 @@ module Specs
       its(:offset)        { should == 3 }
     end
 
-    context ::Neo4j::HasN::Mapping do
+    describe "nodes" do
+      let(:source)  { he.friends }
+      let(:he)      { Person.create }
+      before        { 10.times { he.friends << Person.create }; he.save! }
+
+      context ::Neo4j::HasN::Mapping do
+        its(:size)          { should == 3 }
+        its(:current_page)  { should == 2 }
+        its(:per_page)      { should == 3 }
+        its(:total_entries) { should == 10 }
+        its(:offset)        { should == 3 }
+      end
+
+      context ::Neo4j::Rails::Relationships::NodesDSL do
+        its(:size)          { should == 3 }
+        its(:current_page)  { should == 2 }
+        its(:per_page)      { should == 3 }
+        its(:total_entries) { should == 10 }
+        its(:offset)        { should == 3 }
+      end
+
     end
+
 
     context ::Neo4j::HasList::Mapping do
-    end
-
-    context ::Neo4j::Rails::Relationships::NodesDSL do
-      # class
     end
 
     context ::Neo4j::Rails::Relationships::RelsDSL do
