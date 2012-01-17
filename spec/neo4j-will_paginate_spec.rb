@@ -23,14 +23,12 @@ module Specs
     context ::Neo4j::Traversal::Traverser do
       let(:source)  { Person.all }
       before        { 10.times { Person.create } }
-
       should_be_paginated
     end
 
     context ::Neo4j::Index::LuceneQuery do
       let(:source)  { Person.all(:conditions => 'name: *') }
       before        { 10.times { Person.create(:name => 'x') } }
-
       should_be_paginated
     end
 
@@ -39,12 +37,7 @@ module Specs
       let(:he)      { Person.create }
       before        { 10.times { he.friends << Person.create }; he.save! }
 
-      context ::Neo4j::HasN::Mapping do
-        should_be_paginated
-      end
-
       context ::Neo4j::Rails::Relationships::NodesDSL do
-        let(:source) { super.instace_eval{ @dsl } }
         should_be_paginated
       end
 
