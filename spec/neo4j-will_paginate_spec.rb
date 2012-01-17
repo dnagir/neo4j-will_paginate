@@ -6,6 +6,7 @@ module Specs
     property :name, :default => 'x'
     index :name
     has_n :friends
+    has_list :seen_before
   end
 
   describe Neo4j::WillPaginate::Pagination do
@@ -53,11 +54,23 @@ module Specs
         its(:total_entries) { should == 10 }
         its(:offset)        { should == 3 }
       end
-
     end
 
-
     context ::Neo4j::HasList::Mapping do
+      let(:he)      { Person.create }
+      let(:source)  { he.seen_before }
+      before do
+        Neo4j::Transaction.run do
+          10.times { he.seen_before << Person.create }
+          he.save!
+        end
+      end
+
+      its(:size)          { should == 3 }
+      its(:current_page)  { should == 2 }
+      its(:per_page)      { should == 3 }
+      its(:total_entries) { should == 10 }
+      its(:offset)        { should == 3 }
     end
 
     context ::Neo4j::Rails::Relationships::RelsDSL do
