@@ -44,6 +44,7 @@ module Specs
       end
 
       context ::Neo4j::Rails::Relationships::NodesDSL do
+        let(:source) { super.instace_eval{ @dsl } }
         should_be_paginated
       end
 
