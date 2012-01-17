@@ -12,7 +12,7 @@ module Specs
   describe Neo4j::WillPaginate::Pagination do
     subject { source.paginate(:page => 2, :per_page => 3) }
 
-    def self.shold_be_paginated
+    def self.should_be_paginated
       its(:size)          { should == 3 }
       its(:current_page)  { should == 2 }
       its(:per_page)      { should == 3 }
@@ -31,11 +31,7 @@ module Specs
       let(:source)  { Person.all(:conditions => 'name: *') }
       before        { 10.times { Person.create(:name => 'x') } }
 
-      its(:size)          { should == 3 }
-      its(:current_page)  { should == 2 }
-      its(:per_page)      { should == 3 }
-      its(:total_entries) { should == 10 }
-      its(:offset)        { should == 3 }
+      should_be_paginated
     end
 
     describe "models & rels" do
@@ -44,28 +40,16 @@ module Specs
       before        { 10.times { he.friends << Person.create }; he.save! }
 
       context ::Neo4j::HasN::Mapping do
-        its(:size)          { should == 3 }
-        its(:current_page)  { should == 2 }
-        its(:per_page)      { should == 3 }
-        its(:total_entries) { should == 10 }
-        its(:offset)        { should == 3 }
+        should_be_paginated
       end
 
       context ::Neo4j::Rails::Relationships::NodesDSL do
-        its(:size)          { should == 3 }
-        its(:current_page)  { should == 2 }
-        its(:per_page)      { should == 3 }
-        its(:total_entries) { should == 10 }
-        its(:offset)        { should == 3 }
+        should_be_paginated
       end
 
       context ::Neo4j::Rails::Relationships::RelsDSL do
         let(:source)        { he.rels(:friends, :outgoing) }
-        its(:size)          { should == 3 }
-        its(:current_page)  { should == 2 }
-        its(:per_page)      { should == 3 }
-        its(:total_entries) { should == 10 }
-        its(:offset)        { should == 3 }
+        should_be_paginated
       end
     end
 
@@ -79,11 +63,7 @@ module Specs
         end
       end
 
-      its(:size)          { should == 3 }
-      its(:current_page)  { should == 2 }
-      its(:per_page)      { should == 3 }
-      its(:total_entries) { should == 10 }
-      its(:offset)        { should == 3 }
+      should_be_paginated
     end
 
   end
