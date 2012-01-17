@@ -1,4 +1,7 @@
 *.gem
+*.swp
+db/
+bin/
 .bundle
 Gemfile.lock
 pkg/*
