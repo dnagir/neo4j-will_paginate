@@ -1,6 +1,9 @@
 Integration for Neo4j.rb and will_paginate
 ============================================
 
+This gem is just a simple integration of will_paginate and neo4j.
+[![Build Status](https://secure.travis-ci.org/neo4j-will_paginate/its.png)](http://travis-ci.org/dnagir/neo4j-will_paginate)
+
 Installation
 ==================
 
