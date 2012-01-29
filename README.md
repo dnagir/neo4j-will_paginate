@@ -8,7 +8,7 @@ Installation
 ==================
 
 1. Add `neo4j-will_paginate` to your `Gemfile`.
-2. `require 'neo4j-will_paginate` somewhere from your code.
+2. `require 'neo4j-will_paginate'` somewhere from your code.
 
 
 
