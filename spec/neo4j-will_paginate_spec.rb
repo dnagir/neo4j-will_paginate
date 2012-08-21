@@ -2,11 +2,10 @@ require 'spec_helper'
 
 module Specs
 
-  class Person < ::Neo4j::Model
+  class Person < ::Neo4j::Rails::Model
     property :name, :default => 'x'
     index :name
     has_n :friends
-    has_list :seen_before
   end
 
   describe Neo4j::WillPaginate::Pagination do
@@ -20,13 +19,28 @@ module Specs
       its(:offset)        { should == 3 }
     end
 
-    context ::Neo4j::Traversal::Traverser do
+    context ::Neo4j::Core::Traversal::Traverser do
       let(:source)  { Person.all }
       before        { 10.times { Person.create } }
       should_be_paginated
     end
 
-    context ::Neo4j::Index::LuceneQuery do
+    context ::Neo4j::Core::Cypher::ResultWrapper do
+      let(:source)  { Neo4j._query(Person.all.query.to_s) }
+      before        { 10.times { Person.create(:name => 'x') } }
+      it do
+        pending "does not work yet"
+        should_be_paginated
+      end
+    end
+
+    context ::Neo4j::Core::Traversal::CypherQuery do
+      let(:source)  { Person.all.query }
+      before        { 10.times { Person.create(:name => 'x') } }
+      should_be_paginated
+    end
+
+    context ::Neo4j::Core::Index::LuceneQuery do
       let(:source)  { Person.all(:conditions => 'name: *') }
       before        { 10.times { Person.create(:name => 'x') } }
       should_be_paginated
@@ -43,22 +57,9 @@ module Specs
 
       context ::Neo4j::Rails::Relationships::RelsDSL do
         subject { source.paginate(:page => "2", :per => "3") } # Just a bit different set of options
-        let(:source)        { he.rels(:friends, :outgoing) }
+        let(:source)        { he.rels(:outgoing, :friends) }
         should_be_paginated
       end
-    end
-
-    context ::Neo4j::HasList::Mapping do
-      let(:he)      { Person.create }
-      let(:source)  { he.seen_before }
-      before do
-        Neo4j::Transaction.run do
-          10.times { he.seen_before << Person.create }
-          he.save!
-        end
-      end
-
-      should_be_paginated
     end
 
   end
