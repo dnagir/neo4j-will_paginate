@@ -43,7 +43,7 @@ end
 [
   Neo4j::Core::Traversal::Traverser,
   Neo4j::Core::Index::LuceneQuery,
-  Neo4j::Core::Cypher::ResultWrapper,
+  Neo4j::Cypher::ResultWrapper,
   Neo4j::Core::Traversal::CypherQuery,
   Neo4j::Wrapper::HasN::Nodes,
   Neo4j::Rails::Relationships::NodesDSL,

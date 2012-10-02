@@ -25,7 +25,7 @@ module Specs
       should_be_paginated
     end
 
-    context ::Neo4j::Core::Cypher::ResultWrapper do
+    context ::Neo4j::Cypher::ResultWrapper do
       let(:source)  { Neo4j._query(Person.all.query.to_s) }
       before        { 10.times { Person.create(:name => 'x') } }
       it do
