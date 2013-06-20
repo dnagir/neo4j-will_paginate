@@ -62,6 +62,11 @@ module Specs
       end
     end
 
+    it 'should default to WillPaginate.per_page' do
+      pager = Person.all.paginate
+      pager.per_page.should == ::WillPaginate.per_page
+    end
+
   end
 
 end
