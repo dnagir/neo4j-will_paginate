@@ -1,5 +1,6 @@
 require "neo4j-will_paginate/version"
 require 'will_paginate/collection'
+require 'will_paginate/per_page'
 require 'neo4j'
 
 
@@ -10,7 +11,6 @@ module Neo4j
     # By including the module, {Neo4j::WillPaginate::Pagination#paginate} method will be available.
     module Pagination
       include ::WillPaginate::CollectionMethods
-
 
       # Paginates the {Enumerable} and returns {::WillPaginate::Collection} instance.
       #
@@ -26,7 +26,7 @@ module Neo4j
       #   Person.all(:conditions => "name: Dmytrii*").paginate(:page => 5, :per_page => 10)
       def paginate(options={})
         page      = (options[:page] || 1).to_i
-        per_page  = (options[:per] || options[:per_page] || options[:limit] || WillPaginate.per_page).to_i
+        per_page  = (options[:per] || options[:per_page] || options[:limit] || ::WillPaginate.per_page).to_i
         ::WillPaginate::Collection.create(page, per_page) do |pager|
           res = ::Neo4j::Paginated.create_from(self, page, per_page)
           pager.replace res.to_a
