@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.platform = 'java'
 
   s.add_development_dependency "rspec"
-  s.add_runtime_dependency "activesupport", "~> 3.0"
+  s.add_runtime_dependency "activesupport", "~> 4.0"
   s.add_runtime_dependency "will_paginate", "~> 3.0"
   s.add_runtime_dependency "neo4j", "~> 2.2"
 end
