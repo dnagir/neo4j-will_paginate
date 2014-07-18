@@ -25,7 +25,7 @@ But here is simple example:
 # Probably in the Rails controller:
 
 def index
-  @people = Person.all.paginate(:page => 2, :per_page => 20) # :per_page is optional
+  @people = Person.where(age: 30).paginate(:page => 2, :per_page => 20) # :per_page is optional
 end
 
 # Then in the view:
