@@ -1,72 +1,69 @@
 require 'spec_helper'
+require 'rspec/its'
 
-module Specs
+describe 'pagination' do
+  class Lesson; end
 
-  class Person < ::Neo4j::Rails::Model
+  class Person
+    include Neo4j::ActiveNode
     property :name, :default => 'x'
-    index :name
-    has_n :friends
+    has_many :both, :friends, model_class: 'Person'
+    has_many :out, :lessons
   end
 
-  describe Neo4j::WillPaginate::Pagination do
+  class Lesson
+    include Neo4j::ActiveNode
+    property :subject
+    has_many :in, :people, model_class: Person, origin: :lessons
+  end
+
+  describe 'will_paginate' do
+    before(:all) do
+      Person.destroy_all
+     10.times { Person.create(name: 'x') }
+   end
+
     subject { source.paginate(:page => 2, :per_page => 3) }
 
     def self.should_be_paginated
-      its(:size)          { should == 3 }
-      its(:current_page)  { should == 2 }
-      its(:per_page)      { should == 3 }
-      its(:total_entries) { should == 10 }
-      its(:offset)        { should == 3 }
+      its(:size)          { is_expected.to eq 3 }
+      its(:current_page)  { is_expected.to eq 2 }
+      its(:per_page)      { is_expected.to eq 3 }
+      its(:total_entries) { is_expected.to eq 10 }
+      its(:offset)        { is_expected.to eq 3 }
     end
 
-    context ::Neo4j::Core::Traversal::Traverser do
-      let(:source)  { Person.all }
-      before        { 10.times { Person.create } }
+    describe 'called on QueryProxy chain' do
+      let(:source)  { Person.where(name: 'x') }
       should_be_paginated
     end
 
-    context ::Neo4j::Cypher::ResultWrapper do
-      let(:source)  { Neo4j._query(Person.all.query.to_s) }
-      before        { 10.times { Person.create(:name => 'x') } }
-      it do
-        pending "does not work yet"
-        should_be_paginated
-      end
-    end
-
-    context ::Neo4j::Core::Traversal::CypherQuery do
-      let(:source)  { Person.all.query }
-      before        { 10.times { Person.create(:name => 'x') } }
-      should_be_paginated
-    end
-
-    context ::Neo4j::Core::Index::LuceneQuery do
-      let(:source)  { Person.all(:conditions => 'name: *') }
-      before        { 10.times { Person.create(:name => 'x') } }
-      should_be_paginated
-    end
-
-    describe "models & rels" do
-      let(:source)  { he.friends }
-      let(:he)      { Person.create }
-      before        { 10.times { he.friends << Person.create }; he.save! }
-
-      context ::Neo4j::Rails::Relationships::NodesDSL do
+    describe 'specifying return' do
+      context 'with a symbol' do
+        let(:subject) { source.paginate(page: 2, per_page: 3, return: :p) }
+        let(:source)  { Person.as(:p).where(name: 'x') }
         should_be_paginated
       end
 
-      context ::Neo4j::Rails::Relationships::RelsDSL do
-        subject { source.paginate(:page => "2", :per => "3") } # Just a bit different set of options
-        let(:source)        { he.rels(:outgoing, :friends) }
-        should_be_paginated
+      context 'with an array' do
+        let(:source)  { Person.lessons(:l, :r) }
+        let(:subject) { source.paginate(page: 2, per_page: 3, return: [:l, :r]) }
+        before do
+          Lesson.create
+          Person.each { |p| p.lessons << Lesson.first}
+        end
+
+        it 'should contain arrays of both lessons and rels' do
+          expect(subject.first).to be_an(Array)
+          expect(subject.first[0]).to be_a(Lesson)
+          expect(subject.first[1]).to be_a(Neo4j::Server::CypherRelationship)
+        end
       end
     end
 
     it 'should default to WillPaginate.per_page' do
-      pager = Person.all.paginate
-      pager.per_page.should == ::WillPaginate.per_page
+      pager = Person.where.paginate
+      expect(pager.per_page).to eq ::WillPaginate.per_page
     end
-
   end
-
 end
