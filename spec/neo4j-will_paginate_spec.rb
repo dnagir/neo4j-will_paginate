@@ -50,7 +50,7 @@ describe 'pagination' do
         let(:subject) { source.paginate(page: 2, per_page: 3, return: [:l, :r]) }
         before do
           Lesson.create
-          Person.each { |p| p.lessons << Lesson.first}
+          Person.all.each { |p| p.lessons << Lesson.first}
         end
 
         it 'should contain arrays of both lessons and rels' do

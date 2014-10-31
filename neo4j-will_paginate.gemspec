@@ -22,5 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec-its'
   s.add_runtime_dependency "activesupport", "~> 4.0"
   s.add_runtime_dependency "will_paginate", "~> 3.0"
-  s.add_runtime_dependency "neo4j", '~>3.0.0.alpha.rc.3'
+  s.add_runtime_dependency "neo4j", '~>3.0.2'
 end
