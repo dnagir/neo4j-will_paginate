@@ -10,7 +10,7 @@ RSpec.configure do |config|
 end
 
 
-require 'neo4j-will_paginate'
+require 'neo4j-will_paginate_redux'
 # neo4j Specs clean-up
 require 'fileutils'
 

@@ -1,4 +1,4 @@
-require "neo4j-will_paginate/version"
+require "neo4j-will_paginate_redux/version"
 require 'will_paginate/collection'
 require 'will_paginate/per_page'
 require 'neo4j'
@@ -41,7 +41,7 @@ module Neo4j::ActiveNode::Query
     def pager_return(pager)
       res = ::Neo4j::Paginated.create_from(self, page, per_page, result_order)
       return_method = returns.nil? ? Proc.new { res.to_a } : Proc.new { res.pluck(*returns) }
-      pager.replace return_method.call 
+      pager.replace return_method.call
       pager.total_entries = res.total unless pager.total_entries
     end
 
