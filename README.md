@@ -29,7 +29,7 @@ def index
   # :per_page is optional
   # :return is also optional. To return multiple objects, use an array of symbols
   # :order is -- you guessed it -- optional, too. It accepts the same arguments as Neo4j::ActiveNode::QueryProxy's `order` method
-  @people = Person.(as: :p).where(age: 30).paginate(:page => 2, :per_page => 20, return: :p, order: :name) 
+  @people = Person.as(:p).where(age: 30).paginate(:page => 2, :per_page => 20, return: :p, order: :name) 
 end
 
 # Then in the view:
