@@ -1,8 +1,8 @@
 require "neo4j-will_paginate_redux/version"
+require 'will_paginate'
 require 'will_paginate/collection'
 require 'will_paginate/per_page'
 require 'neo4j'
-
 
 module Neo4j::ActiveNode::Query
   class QueryProxy

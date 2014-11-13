@@ -1,3 +1,6 @@
+== 0.3.3
+* Require 'will_paginate' to make things, ya know, work correctly.
+
 == 0.3.2 / 2014-11-03
 * Adds `order` option.
 * Moving to the neo4j-will_paginate_redux gem officially because listing repo in Gemfile is annoying.
