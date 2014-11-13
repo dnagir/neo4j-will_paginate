@@ -33,7 +33,7 @@ def index
 end
 
 # Then in the view:
-paginate @people
+will_paginate @people
 
 ```
 
