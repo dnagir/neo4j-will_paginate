@@ -1,3 +1,6 @@
+== 0.3.4
+* Relaxed Neo4j version requirements a bit. Just use something new.
+
 == 0.3.3
 * Require 'will_paginate' to make things, ya know, work correctly.
 
