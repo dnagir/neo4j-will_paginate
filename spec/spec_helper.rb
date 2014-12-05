@@ -5,35 +5,62 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 end
 
 
-require 'neo4j-will_paginate'
-
-
+require 'neo4j-will_paginate_redux'
 # neo4j Specs clean-up
 require 'fileutils'
 
-def rm_db_storage!
-  FileUtils.rm_rf Neo4j::Config[:storage_path]
-  raise "Can't delete db" if File.exist?(Neo4j::Config[:storage_path])
+EMBEDDED_DB_PATH = File.join(Dir.tmpdir, "neo4j-core-java")
+
+I18n.enforce_available_locales = false
+
+def create_session
+  if RUBY_PLATFORM != 'java'
+    create_server_session
+  else
+    require "neo4j-embedded/embedded_impermanent_session"
+    create_embedded_session
+  end
 end
 
-RSpec.configure do |config|
-  $spec_counter = 0
+def create_embedded_session
+  session = Neo4j::Session.open(:impermanent_db, EMBEDDED_DB_PATH, auto_commit: true)
+  session.start
+end
 
-  config.before(:all) do
-    rm_db_storage! unless Neo4j.running?
+def create_server_session
+  Neo4j::Session.open(:server_db, "http://localhost:7474")
+  delete_db
+end
+
+FileUtils.rm_rf(EMBEDDED_DB_PATH)
+
+def delete_db
+  Neo4j::Session.current._query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
+end
+
+RSpec.configure do |c|
+
+  c.before(:suite) do
+    Neo4j::Session.current.close if Neo4j::Session.current
+    create_session
   end
 
-  config.after(:each) do
-    Neo4j::Rails::Model.close_lucene_connections
-    Neo4j::Transaction.run do
-      Neo4j.threadlocal_ref_node = Neo4j::Node.new :name => "ref_#{$spec_counter}"
-      $spec_counter += 1
+  c.before(:each) do
+    Neo4j::Session._listeners.clear
+    curr_session = Neo4j::Session.current
+    curr_session || create_session
+  end
+
+  c.after(:each) do
+    if Neo4j::Transaction.current
+      puts "WARNING forgot to close transaction"
+      Neo4j::Transaction.current.close
     end
   end
+
 end
